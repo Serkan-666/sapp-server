@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebSocket Client</title>
+</head>
+<body>
+  <h1>WebSocket Client</h1>
+  <script>
+    const socket = new WebSocket('ws://localhost:3001');
+
+    // Bağlantı açıldığında çalışır
+    socket.addEventListener('open', (event) => {
+      console.log('WebSocket bağlantısı açıldı.');
+      socket.send(JSON.stringify({ type: 'AUTH', token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzIzOTMyNjQ5LCJleHAiOjE3MjM5Njg2NDl9.cJ465iSl3LBKc9vPpDrZNJE7cgxbSnE6j1jdRzP5P68' }));
+    });
+
+    // Mesaj alındığında çalışır
+    socket.addEventListener('message', (event) => {
+      console.log('Sunucudan mesaj alındı:', event.data);
+    });
+
+    // Bağlantı kapandığında çalışır
+    socket.addEventListener('close', () => {
+      console.log('WebSocket bağlantısı kapandı.');
+      
+    });
+  </script>
+</body>
+</html>
