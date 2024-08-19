@@ -1,9 +1,11 @@
 // controllers/messageController.js
 import t_message from "../models/t_message.js";
+import { verifyToken } from "../utils/validation.js";
 import { broadcastMessage } from "../websocketUtils.js";
 
 const getAllMessages = async (req, res) => {
   try {
+    await verifyToken(req.headers.authorization?.split(" ")[1]);
     const messages = await t_message.findAll();
     res.status(200).json(messages);
   } catch (error) {
@@ -14,6 +16,8 @@ const getAllMessages = async (req, res) => {
 
 const createMessage = async (req, res) => {
   try {
+    await verifyToken(req.headers.authorization?.split(" ")[1]);
+
     const { content, username } = req.body;
 
     if (!username) {

@@ -6,6 +6,7 @@ import { broadcastMessage, connections } from "../websocketUtils.js";
 import {
   validateLoginUser,
   validateRegisterUser,
+  verifyToken,
 } from "../utils/validation.js";
 const { sign } = jwt;
 
@@ -45,11 +46,14 @@ const login = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
   try {
+    await verifyToken(req.headers.authorization?.split(" ")[1]);
+
     const users = await t_user.findAll();
     users.sort((a, b) => b.isConnected - a.isConnected);
+
     res.status(200).json(users);
   } catch (error) {
-    res.status(500).json({ error: "Veriler alınamadı" });
+    res.status(500).json({ message: error.message });
   }
 };
 

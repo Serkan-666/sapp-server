@@ -1,4 +1,5 @@
 import { compare } from "bcrypt";
+import jwt from "jsonwebtoken";
 
 const validateLoginUser = async (username, password, t_user, connections) => {
   const user = await t_user.findOne({ where: { username } });
@@ -45,4 +46,19 @@ const validateRegisterUser = async (
     throw new Error(`Kullanıcı Mevcut`);
   }
 };
-export { validateLoginUser, validateRegisterUser };
+
+const verifyToken = (token) => {
+  if (!token) {
+    throw new Error(`Yetkisiz erişim: Token eksik"`);
+  }
+  return new Promise((resolve, reject) => {
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(decoded);
+      }
+    });
+  });
+};
+export { validateLoginUser, validateRegisterUser, verifyToken };
